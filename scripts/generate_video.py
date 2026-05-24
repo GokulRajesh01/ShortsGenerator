@@ -1,8 +1,8 @@
 import subprocess
 import os
-from path_utils import ASSETS_DIR, OUTPUT_DIR
+from path_utils import OUTPUT_DIR
 
-background_video = f"{ASSETS_DIR}/background-video.mp4"
+background_video = f"{OUTPUT_DIR}/dynamic_background.mp4"
 audio_file = f"{OUTPUT_DIR}/narration.mp3"
 output_video = f"{OUTPUT_DIR}/final_video.mp4"
 

@@ -1,81 +1,156 @@
 # AI Short Videos Factory
 
-An experimental AI-powered short-form video generation pipeline.
----
+An automated AI-powered short-form content generation pipeline for:
+- YouTube Shorts
+- Instagram Reels
+- TikTok
 
-# Features Implemented
-
-- Gemini API integration
-- AI narration script generation
-- Edge-TTS voice generation
-- Automated MP3 narration creation
-- Automated MP4 video generation
-- Modular Python script structure
+This project generates:
+- AI-written scripts
+- AI voice narration
+- Dynamic background videos
+- Stylized subtitles
+- Final rendered short-form videos
 
 ---
 
 # Current Pipeline
 
-Topic
+Topic Input
 ↓
-Gemini API
+Gemini Script Generation
 ↓
-Narration Script
+Edge-TTS Narration
 ↓
-Edge-TTS
+Dynamic Background Generation
 ↓
-Narration MP3
+Video + Audio Merge
 ↓
-FFmpeg
+ASS Subtitle Generation
 ↓
-Final MP4
+FFmpeg Subtitle Burn
+↓
+Final Short-form Video
 
 ---
 
-# Project Structure
+# Features
 
-```text
-ai-shortvideos-factory/
-│
-├── scripts/
-│   ├── generate_script.py
-│   ├── generate_video.py
-│   ├── generate_voice.py
-│   ├── list_models.py
-│   └── path_utils.py
-│
-├── .gitignore
-├── README.md
-└── requirements.txt
-```
+## AI Script Generation
+Uses Google Gemini API to generate:
+- Hook-driven scripts
+- Short-form optimized narration
+- Retention-oriented pacing
+
+---
+
+## Free AI Voice Generation
+Uses:
+- edge-tts
+
+No ElevenLabs subscription required.
+
+---
+
+## Dynamic Video Backgrounds
+Randomly:
+- selects clips
+- trims segments
+- stitches dynamic vertical videos
+
+This avoids:
+- static slideshow feel
+- repetitive visuals
+
+---
+
+## TikTok/Shorts Style Subtitles
+Uses:
+- ASS subtitles
+- FFmpeg burn-in
+
+Supports:
+- large captions
+- chunk-based subtitles
+- retention-focused placement
 
 ---
 
 # Tech Stack
 
-| Purpose | Tool |
-|---|---|
-| Script Generation | Gemini API |
-| Voice Generation | Edge-TTS |
-| Video Rendering | FFmpeg |
-| Language | Python |
+## AI
+- Gemini API
+
+## TTS
+- edge-tts
+
+## Video Processing
+- MoviePy
+- FFmpeg
+
+## Subtitle Engine
+- ASS subtitles
+- FFmpeg rendering
+
+## Language
+- Python
+
+---
+
+# Folder Structure
+
+ai-shortvideos-factory/
+│
+├── assets/
+│   └── background clips
+│
+├── output/
+│   ├── narration.mp3
+│   ├── dynamic_background.mp4
+│   ├── final_video.mp4
+│   ├── subtitles.ass
+│   └── final_video_subtitles.mp4
+│
+├── scripts/
+│   ├── generate_script.py
+│   ├── generate_voice.py
+│   ├── create_dynamic_background.py
+│   ├── merge_audio_video.py
+│   ├── generate_ass_subtitles.py
+│   └── burn_ass_subtitles.py
+│
+├── .env
+├── requirements.txt
+└── README.md
 
 ---
 
 # Setup
 
-## Create Virtual Environment
+## 1. Clone Repo
 
-### Windows
+```bash
+git clone <repo-url>
+cd ai-shortvideos-factory
+```
+
+---
+
+## 2. Create Virtual Environment
 
 ```bash
 python -m venv generator_environment
+```
+
+### Activate venv (Windows)
+
+```bash
 generator_environment\Scripts\activate
 ```
 
 ---
 
-## Install Dependencies
+## 3. Install Requirements
 
 ```bash
 pip install -r requirements.txt
@@ -83,22 +158,9 @@ pip install -r requirements.txt
 
 ---
 
-## Install FFmpeg
+# Environment Variables
 
-Download:
-https://ffmpeg.org/download.html
-
-Verify installation:
-
-```bash
-ffmpeg -version
-```
-
----
-
-## Configure Environment Variables
-
-Create `.env`
+Create a `.env` file in project root:
 
 ```env
 GEMINI_API_KEY=YOUR_API_KEY
@@ -106,9 +168,19 @@ GEMINI_API_KEY=YOUR_API_KEY
 
 ---
 
-# Running Scripts
+# FFmpeg Setup
 
-## Generate AI Script
+Install FFmpeg and ensure this works:
+
+```bash
+ffmpeg -version
+```
+
+---
+
+# Current Workflow
+
+## 1. Generate Script
 
 ```bash
 python scripts/generate_script.py
@@ -116,7 +188,7 @@ python scripts/generate_script.py
 
 ---
 
-## Generate Narration Voice
+## 2. Generate Voice
 
 ```bash
 python scripts/generate_voice.py
@@ -124,30 +196,32 @@ python scripts/generate_voice.py
 
 ---
 
-## Generate Final Video
+## 3. Generate Dynamic Background
 
 ```bash
-python scripts/generate_video.py
+python scripts/create_dynamic_background.py
 ```
 
 ---
 
-# Current Status
+## 4. Merge Video + Audio
 
-Project is currently in:
-- MVP stage
-- local execution only
-- experimental automation phase
-
-Future plans include:
-- subtitles
-- automated clip switching
-- Telegram approval workflow
-- automated uploads
-- orchestration with n8n
+```bash
+python scripts/merge_audio_video.py
+```
 
 ---
 
-# Disclaimer
+## 5. Generate ASS Subtitles
 
-This project is experimental and intended for learning and automation practice.
+```bash
+python scripts/generate_ass_subtitles.py
+```
+
+---
+
+## 6. Burn ASS Subtitles
+
+```bash
+python scripts/burn_ass_subtitles.py
+```

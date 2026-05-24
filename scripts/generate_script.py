@@ -10,7 +10,7 @@ API_KEY = os.getenv("GEMINI_API_KEY")
 MAX_RETRIES = 3
 
 prompt = """
-Write ONLY a narration script for a viral 35-second YouTube Short about AI replacing software engineers.
+Write only a narration script for a viral 35-second YouTube Short about AI replacing software engineers.
 
 Rules:
 - Plain narration text only
@@ -49,9 +49,6 @@ for attempt in range(MAX_RETRIES):
     else:
         print(response.text)
         break
-
-print(response.status_code)
-print(response.text)
     
 data = response.json()
 
