@@ -4,7 +4,7 @@ from pathlib import Path
 ROOT_DIR = Path(__file__).resolve().parent.parent
 
 # Common folders
-ASSETS_DIR = ROOT_DIR / "assets"
+ASSETS_DIR = ROOT_DIR / "temp_assets"
 OUTPUT_DIR = ROOT_DIR / "output"
 SCRIPTS_DIR = ROOT_DIR / "scripts"
 

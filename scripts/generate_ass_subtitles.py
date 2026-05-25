@@ -1,37 +1,64 @@
+import json
 from path_utils import OUTPUT_DIR
 
 # -----------------------------------
 # PATHS
 # -----------------------------------
-script_path = f"{OUTPUT_DIR}/output_trial.txt"
+json_path = f"{OUTPUT_DIR}/timestamps.json"
 ass_path = f"{OUTPUT_DIR}/subtitles.ass"
 
 # -----------------------------------
-# READ SCRIPT
+# LOAD TIMESTAMPS
 # -----------------------------------
-with open(script_path, "r", encoding="utf-8") as f:
-    text = f.read()
+with open(json_path, "r", encoding="utf-8") as f:
+    data = json.load(f)
 
 # -----------------------------------
-# SPLIT INTO WORD GROUPS
+# COLLECT WORDS
 # -----------------------------------
-words = text.split()
+all_words = []
+for segment in data["segments"]:
+    for word in segment["words"]:
+        all_words.append(word)
+
+# -----------------------------------
+# SETTINGS
+# -----------------------------------
+chunk_size = 2
+SYNC_OFFSET = 0.22
+
+# -----------------------------------
+# GROUP WORDS
+# -----------------------------------
 chunks = []
-chunk_size = 3
-for i in range(0, len(words), chunk_size):
-    chunk = " ".join(
-        words[i:i + chunk_size]
+for i in range(0, len(all_words), chunk_size):
+    word_group = all_words[i:i + chunk_size]
+    if not word_group:
+        continue
+    text = " ".join(
+        w["word"].strip()
+        for w in word_group
+    ).upper()
+    # Delay subtitles slightly
+    start = max(
+        0,
+        word_group[0]["start"] + SYNC_OFFSET
     )
-    chunks.append(
-        chunk.upper()
+    end = (
+        word_group[-1]["end"] + SYNC_OFFSET
     )
+    chunks.append({
+        "text": text,
+        "start": start,
+        "end": end
+    })
 
 # -----------------------------------
 # ASS HEADER
 # -----------------------------------
 header = """
 [Script Info]
-Title: TikTok Style Subtitles
+Title: Whisper Synced Subtitles
 ScriptType: v4.00+
 PlayResX: 1080
 PlayResY: 1920
@@ -40,7 +67,7 @@ ScaledBorderAndShadow: yes
 [V4+ Styles]
 Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
 
-Style: Default,Arial,52,&H00FFFFFF,&H0000FFFF,&H00000000,&H64000000,-1,0,0,0,100,100,0,0,1,4,0,2,50,50,350,1
+Style: Default,Arial,56,&H00FFFFFF,&H0000FFFF,&H00000000,&H64000000,-1,0,0,0,100,100,0,0,1,5,0,2,50,50,320,1
 
 [Events]
 Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
@@ -59,26 +86,21 @@ def format_ass_time(seconds):
 # CREATE EVENTS
 # -----------------------------------
 events = []
-start_time = 0.0
 for chunk in chunks:
-    # Dynamic timing
-    word_count = len(chunk.split())
-    duration_per_chunk = max(
-        0.65,
-        word_count * 0.32
+    start_ass = format_ass_time(
+        chunk["start"]
     )
-    end_time = start_time + duration_per_chunk
-    start_ass = format_ass_time(start_time)
-    end_ass = format_ass_time(end_time)
+    end_ass = format_ass_time(
+        chunk["end"]
+    )
     event = (
         f"Dialogue: 0,"
         f"{start_ass},"
         f"{end_ass},"
         f"Default,,0,0,0,,"
-        f"{chunk}"
+        f"{chunk['text']}"
     )
     events.append(event)
-    start_time = end_time
 
 # -----------------------------------
 # WRITE FILE
@@ -87,5 +109,6 @@ with open(ass_path, "w", encoding="utf-8") as f:
     f.write(header)
     for event in events:
         f.write(event + "\n")
-        
-print(f"\nASS subtitles created at:\n{ass_path}")
+print(
+    f"\nWhisper-synced ASS subtitles created at:\n{ass_path}"
+)

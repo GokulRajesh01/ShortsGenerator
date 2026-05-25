@@ -17,9 +17,14 @@ command = [
     "-i", video_input,
     "-vf",
     f"ass='{subtitle_file_fixed}'",
+    "-c:v", "libx264",
+    "-preset", "slow",
+    "-crf", "18",
+    "-b:v", "12000k",
+    "-c:a", "copy",
     video_output
 ]
-
 subprocess.run(command)
-
-print(f"\nFinal subtitled video created at:\n{video_output}")
+print(
+    f"\nFinal subtitled video created at:\n{video_output}"
+)
